@@ -32,24 +32,20 @@ sub Path::Class::Dir::udir {
 
 sub ufile_from_uri {
     my $uri = shift;
+    $uri = URI->new($uri) unless blessed $uri;
     if ($^O eq "MSWin32") {
-        $uri =~ s!^file:///!file://!g; # remove leading slash for absolute
-        $uri = URI->new($uri) unless blessed $uri;
         ufile(Encode::decode_utf8($uri->file('win32')));
     } else {
-        $uri = URI->new($uri) unless blessed $uri;
         ufile(Encode::decode_utf8($uri->file('unix')));
     }
 }
 
 sub udir_from_uri {
     my $uri = shift;
+    $uri = URI->new($uri) unless blessed $uri;
     if ($^O eq "MSWin32") {
-        $uri =~ s!^file:///!file://!g; # remove leading slash for absolute
-        $uri = URI->new($uri) unless blessed $uri;
         udir(Encode::decode_utf8($uri->file('win32')));
     } else {
-        $uri = URI->new($uri) unless blessed $uri;
         udir(Encode::decode_utf8($uri->file('unix')));
     }
 }
@@ -62,11 +58,8 @@ sub new {
 sub uri {
     my $self = shift;
     my $path = Encode::encode_utf8($self->{path}->stringify);
-    if ($^O eq "MSWin32") {
-        $path =~ tr!\\!/!; # can't use backslash as separator
-        $path = "/$path" if $self->is_absolute; # make "file:///x:/foo/bar/"
-    }
-    if ($self->is_absolute) {
+    $path =~ tr!\\!/! if $^O eq "MSWin32";
+   if ($self->is_absolute) {
         return URI->new("file://$path");
     } else {
         return URI->new("file:$path");
@@ -109,9 +102,23 @@ sub open {
 sub next {
     my $self = shift;
     $self->{path}->{dh} = $self->open unless $self->{path}->{dh};
-    my $file = $self->{path}->next;
-    $file = Encode::encode($encoding, $file) if $file;
-    $file;
+    local *IO::Dir::read = sub { Encode::decode $encoding, readdir shift };
+    ufile($self->{path}->next);
+}
+
+sub children {
+  my ($self, %opts) = @_;
+  
+  $self->{path}->{dh} = $self->open unless $self->{path}->{dh};
+  
+  my @out;
+  while (my $entry = $self->{path}->{dh}->read) {
+    # XXX What's the right cross-platform way to do this?
+    next if (!$opts{all} && ($entry eq '.' || $entry eq '..'));
+    push @out, $self->file($entry);
+    $out[-1] = $self->subdir($entry) if -d $out[-1];
+  }
+  return @out;
 }
 
 use overload (

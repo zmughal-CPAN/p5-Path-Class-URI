@@ -2,7 +2,7 @@ package Path::Class::URI;
 
 use strict;
 use 5.008_001;
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use URI;
 use URI::file;
@@ -23,12 +23,7 @@ sub dir_from_uri {
 sub Path::Class::Entity::uri {
     my $self = shift;
     my $path = $self->stringify;
-    if ($^O eq "MSWin32") {
-        # can't use backslash as separator
-        $path =~ tr!\\!/!;
-        # make "file:///x:/foo/bar/" if path is absolute
-        $path = "/$path" if $self->is_absolute && $path !~ /^\//;
-    }
+    $path =~ tr!\\!/! if $^O eq "MSWin32";
     if ($self->is_absolute) {
         return URI->new("file://$path");
     } else {

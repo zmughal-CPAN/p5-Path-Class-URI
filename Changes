@@ -1,5 +1,8 @@
 Revision history for Perl extension Path::Class::URI
 
+0.03  Tue Dec  2 18:03:38 JST 2008
+        - Fix for Win32 issue (mattn)
+
 0.02  Tue Dec  2 17:35:16 JST 2008
         - open() now works
         - Added ufile() and udir() to Path::Class::File and Dir for transformation
