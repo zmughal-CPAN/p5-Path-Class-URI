@@ -20,16 +20,38 @@ sub udir {
     __PACKAGE__->new(dir(@_));
 }
 
+sub Path::Class::File::ufile {
+    my $file = shift;
+    ufile(_decode_filename($file), @_);
+}
+
+sub Path::Class::Dir::udir {
+    my $dir = shift;
+    udir(_decode_filename($dir), @_);
+}
+
 sub ufile_from_uri {
     my $uri = shift;
-    $uri = URI->new($uri) unless blessed $uri;
-    ufile(Encode::decode_utf8($uri->file('unix')));
+    if ($^O eq "MSWin32") {
+        $uri =~ s!^file:///!file://!g; # remove leading slash for absolute
+        $uri = URI->new($uri) unless blessed $uri;
+        ufile(Encode::decode_utf8($uri->file('win32')));
+    } else {
+        $uri = URI->new($uri) unless blessed $uri;
+        ufile(Encode::decode_utf8($uri->file('unix')));
+    }
 }
 
 sub udir_from_uri {
     my $uri = shift;
-    $uri = URI->new($uri) unless blessed $uri;
-    udir(Encode::decode_utf8($uri->file('unix')));
+    if ($^O eq "MSWin32") {
+        $uri =~ s!^file:///!file://!g; # remove leading slash for absolute
+        $uri = URI->new($uri) unless blessed $uri;
+        udir(Encode::decode_utf8($uri->file('win32')));
+    } else {
+        $uri = URI->new($uri) unless blessed $uri;
+        udir(Encode::decode_utf8($uri->file('unix')));
+    }
 }
 
 sub new {
@@ -39,9 +61,13 @@ sub new {
 
 sub uri {
     my $self = shift;
-    my $path = Encode::encode_utf8($self->{path}->as_foreign('Unix')->stringify);
+    my $path = Encode::encode_utf8($self->{path}->stringify);
+    if ($^O eq "MSWin32") {
+        $path =~ tr!\\!/!; # can't use backslash as separator
+        $path = "/$path" if $self->is_absolute; # make "file:///x:/foo/bar/"
+    }
     if ($self->is_absolute) {
-        return URI->new("file://localhost$path");
+        return URI->new("file://$path");
     } else {
         return URI->new("file:$path");
     }
@@ -49,9 +75,7 @@ sub uri {
 
 our $encoding;
 
-sub stringify {
-    my $self = shift;
-
+sub init_encoding {
     unless ($encoding) {
         $encoding = 'utf-8';
         if ($^O eq 'MSWin32') {
@@ -62,8 +86,32 @@ sub stringify {
             };
         }
     }
+}
 
+sub stringify {
+    my $self = shift;
+    init_encoding();
     Encode::encode($encoding, $self->{path}->stringify);
+}
+
+sub _decode_filename {
+    init_encoding();
+    my $filename = shift;
+    Encode::decode($encoding, "$filename");
+}
+
+sub open {
+    my $self = shift;
+    my $class = $self->is_dir ? "IO::Dir" : "IO::File";
+    $class->new($self->stringify, @_);
+}
+
+sub next {
+    my $self = shift;
+    $self->{path}->{dh} = $self->open unless $self->{path}->{dh};
+    my $file = $self->{path}->next;
+    $file = Encode::encode($encoding, $file) if $file;
+    $file;
 }
 
 use overload (
@@ -103,7 +151,7 @@ Path::Class::Unicode - Maps Unicode filenames to local encoding and code pages
 
   my $fn   = "\x{55ed}.txt";
   my $file = ufile("/path", $fn);
-  my $uri  = $file->uri;  # file://localhost/path/%E5%97%AD.txt (always utf-8)
+  my $uri  = $file->uri;  # file:///path/%E5%97%AD.txt (always utf-8)
 
   my $fh   = ufile_from_uri($uri)->open;
 

@@ -28,4 +28,4 @@ file:bob/john.txt
 --- input
 /path/foo/\xe5\x97\xad.txt
 --- expected
-file://localhost/path/foo/%E5%97%AD.txt
+file:///path/foo/%E5%97%AD.txt

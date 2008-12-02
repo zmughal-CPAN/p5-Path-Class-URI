@@ -2,7 +2,7 @@ package Path::Class::URI;
 
 use strict;
 use 5.008_001;
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use URI;
 use URI::file;
@@ -22,10 +22,17 @@ sub dir_from_uri {
 
 sub Path::Class::Entity::uri {
     my $self = shift;
+    my $path = $self->stringify;
+    if ($^O eq "MSWin32") {
+        # can't use backslash as separator
+        $path =~ tr!\\!/!;
+        # make "file:///x:/foo/bar/" if path is absolute
+        $path = "/$path" if $self->is_absolute && $path !~ /^\//;
+    }
     if ($self->is_absolute) {
-        return URI->new("file://localhost" . $self->as_foreign('Unix'));
+        return URI->new("file://$path");
     } else {
-        return URI->new("file:" . $self->as_foreign('Unix'));
+        return URI->new("file:$path");
     }
 }
 
@@ -54,9 +61,9 @@ Path::Class::URI - Serializes and deserializes Path::Class objects as file:// UR
   my $file = file('bob', 'john.txt');
   my $uri  = $file->uri; # file:bob/john.txt
 
-  file('', 'tmp', 'bar.txt')->uri; # file://localhost/tmp/bar.txt
+  file('', 'tmp', 'bar.txt')->uri; # file:///tmp/bar.txt
 
-  my $file = file_from_uri("file://localhost/tmp/bar.txt"); # or URI::file object
+  my $file = file_from_uri("file:///tmp/bar.txt"); # or URI::file object
   $fh = $file->open;
 
 =head1 DESCRIPTION
