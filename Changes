@@ -1,5 +1,8 @@
 Revision history for Perl extension Path::Class::URI
 
+0.04  Wed Dec  3 16:35:55 JST 2008
+        - Updated VERSION
+
 0.03  Tue Dec  2 18:03:38 JST 2008
         - Fix for Win32 issue (mattn)
 

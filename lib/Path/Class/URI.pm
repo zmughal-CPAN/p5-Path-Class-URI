@@ -2,7 +2,7 @@ package Path::Class::URI;
 
 use strict;
 use 5.008_001;
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use URI;
 use URI::file;
