@@ -24,6 +24,7 @@ sub Path::Class::Entity::uri {
     my $self = shift;
     my $path = $self->stringify;
     $path =~ tr!\\!/! if $^O eq "MSWin32";
+    $path .= '/' if $self->isa('Path::Class::Dir'); # preserve directory if used as base URI
     if ($self->is_absolute) {
         return URI->new("file://$path");
     } else {
