@@ -9,6 +9,7 @@ use URI::file;
 use Exporter::Lite;
 use Path::Class;
 use Scalar::Util qw(blessed);
+use URI::Escape;
 
 our @EXPORT = qw( file_from_uri dir_from_uri );
 
@@ -22,7 +23,9 @@ sub dir_from_uri {
 
 sub Path::Class::Entity::uri {
     my $self = shift;
-    my $path = $self->stringify;
+    my $escaped_self = $self->new( map { uri_escape($_) } $self->components );
+    # escape the components so that URI can see them as path segments
+    my $path = $escaped_self->stringify;
     $path =~ tr!\\!/! if $^O eq "MSWin32";
     $path .= '/' if $self->isa('Path::Class::Dir'); # preserve directory if used as base URI
     if ($self->is_absolute) {
