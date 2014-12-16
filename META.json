@@ -1,0 +1,72 @@
+{
+   "abstract" : "Serializes and deserializes Path::Class objects as file:// URI",
+   "author" : [
+      "Tatsuhiko Miyagawa <miyagawa@cpan.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Dist::Zilla version 5.025, Dist::Milla version v1.0.9, CPAN::Meta::Converter version 2.143240",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Path-Class-URI",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "xt",
+         "inc",
+         "share",
+         "eg",
+         "examples"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "7.04"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "Module::Build::Tiny" : "0.039"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "Dist::Milla" : "v1.0.9",
+            "Test::Pod" : "1.41"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Exporter::Lite" : "0",
+            "ExtUtils::MakeMaker" : "7.04",
+            "Path::Class" : "0",
+            "Scalar::Util" : "0",
+            "Test::More" : "0",
+            "URI" : "0"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/zmughal/p5-Path-Class-URI/issues"
+      },
+      "homepage" : "https://github.com/zmughal/p5-Path-Class-URI",
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/zmughal/p5-Path-Class-URI.git",
+         "web" : "https://github.com/zmughal/p5-Path-Class-URI"
+      }
+   },
+   "version" : "0.04",
+   "x_contributors" : [
+      "Tatsuhiko Miyagawa <miyagawa@bulknews.net>",
+      "Zakariyya Mughal <zaki.mughal@gmail.com>"
+   ]
+}
+
