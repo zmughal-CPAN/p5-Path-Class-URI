@@ -1,6 +1,8 @@
 Revision history for Perl extension Path::Class::URI
 
 {{$NEXT}}
+
+0.05  2014-12-15 18:55:31 CST
         - components of path must be escaped for URI
         - add support for passing in a base URI
 
