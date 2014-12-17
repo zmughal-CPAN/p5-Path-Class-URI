@@ -16,7 +16,7 @@ run {
     is $abs, $block->expected;
 
     my $abs_path = file_from_uri($abs);
-    is $abs_path, $block->abs_path;
+    is $abs_path, file($block->abs_path);
 };
 
 __END__
