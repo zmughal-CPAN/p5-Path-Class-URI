@@ -2,7 +2,7 @@ package Path::Class::Unicode;
 
 use strict;
 use 5.008_001;
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 use Exporter::Lite;
 our @EXPORT = qw( ufile udir ufile_from_uri udir_from_uri );

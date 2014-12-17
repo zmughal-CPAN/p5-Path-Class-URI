@@ -1,6 +1,8 @@
 Revision history for Perl extension Path::Class::URI
 
 {{$NEXT}}
+
+0.06  2014-12-16 22:37:04 CST
         - fix test so that it passes on Win32
 
 0.05  2014-12-15 18:55:31 CST
