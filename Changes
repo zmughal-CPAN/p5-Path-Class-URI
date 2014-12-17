@@ -1,6 +1,7 @@
 Revision history for Perl extension Path::Class::URI
 
 {{$NEXT}}
+        - fix test so that it passes on Win32
 
 0.05  2014-12-15 18:55:31 CST
         - components of path must be escaped for URI
