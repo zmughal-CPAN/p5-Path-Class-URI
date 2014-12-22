@@ -26,7 +26,7 @@
    "prereqs" : {
       "build" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "7.04"
+            "Module::Build::Tiny" : "0.039"
          }
       },
       "configure" : {
@@ -43,11 +43,18 @@
       "runtime" : {
          "requires" : {
             "Exporter::Lite" : "0",
-            "ExtUtils::MakeMaker" : "7.04",
+            "Module::Build::Tiny" : "0.039",
             "Path::Class" : "0",
             "Scalar::Util" : "0",
+            "Test::Base" : "0",
             "Test::More" : "0",
             "URI" : "0"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "Test::Base" : "0",
+            "Test::More" : "0"
          }
       }
    },
