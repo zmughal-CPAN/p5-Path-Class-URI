@@ -70,7 +70,7 @@
          "web" : "https://github.com/zmughal/p5-Path-Class-URI"
       }
    },
-   "version" : "0.06",
+   "version" : "0.07",
    "x_contributors" : [
       "Tatsuhiko Miyagawa <miyagawa@bulknews.net>",
       "Zakariyya Mughal <zaki.mughal@gmail.com>"
