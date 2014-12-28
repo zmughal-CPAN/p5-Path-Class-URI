@@ -1,6 +1,6 @@
 requires 'Exporter::Lite';
 requires 'Module::Build::Tiny', '0.039';
-requires 'Path::Class';
+requires 'Path::Class', '0.29';
 requires 'Scalar::Util';
 requires 'Test::More';
 requires 'Test::Base';
